@@ -14,11 +14,12 @@ and defensible/destructible arc sets.
 The following scripts are included:
     call_netgen -- Calls a standalone NETGEN .exe to generate an interdependent
         network instance.
+    generate_trials -- Generates a set of trials
 """
 
 import math
 import os
-import time
+import random
 
 #==============================================================================
 def call_netgen(file, nodes, arcs, itype, inum, seed=None, sources=None,
@@ -40,8 +41,7 @@ def call_netgen(file, nodes, arcs, itype, inum, seed=None, sources=None,
         inum -- Number of interdependencies.
 
     Accepts the following optional keyword arguments:
-        seed -- Integer RNG seed for NETGEN. Defaults to a random seed based on
-            the system time.
+        seed -- Integer RNG seed for NETGEN. Defaults to a random seed.
         sources -- Number of source nodes. Defaults to 20% of all nodes
             (rounded up).
         sinks -- Number of sink nodes. Defaults to 20% of all nodes (rounded
@@ -56,7 +56,7 @@ def call_netgen(file, nodes, arcs, itype, inum, seed=None, sources=None,
 
     # Set unspecified RNG seed to one based on the system time
     if seed == None:
-        seed = int(time.mktime(time.localtime()))
+        seed = int(10e8 * random.random())
 
     # Set unspecified sources and sinks
     if sources == None:
@@ -68,11 +68,12 @@ def call_netgen(file, nodes, arcs, itype, inum, seed=None, sources=None,
     if supply == None:
         supply = 10000 * math.ceil(nodes / 256)
 
-    # Call the NETGEN program
-    os.system("netgen.exe "+file+" "+str(seed)+" "+str(nodes)+" "+str(sources)+
-              " "+str(sinks)+" "+str(arcs)+" "+str(costs[0])+" "+str(costs[1])+
-              " "+str(supply)+" 0 0 100 100 "+str(capacities[0])+" "+
-              str(capacities[1])+" "+str(itype)+" "+str(inum))
+    # Call the NETGEN program and return the exit code
+    return os.system("netgen.exe "+file+" "+str(seed)+" "+str(nodes)+" "+
+                     str(sources)+" "+str(sinks)+" "+str(arcs)+" "+
+                     str(costs[0])+" "+str(costs[1])+" "+str(supply)+
+                     " 0 0 100 100 "+str(capacities[0])+" "+str(capacities[1])+
+                     " "+str(itype)+" "+str(inum))
 
 #==============================================================================
 def generate_trials():
