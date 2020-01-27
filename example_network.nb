@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     49412,       1192]
-NotebookOptionsPosition[     48647,       1166]
-NotebookOutlinePosition[     48991,       1181]
-CellTagsIndexPosition[     48948,       1178]
+NotebookDataLength[     51684,       1243]
+NotebookOptionsPosition[     50919,       1217]
+NotebookOutlinePosition[     51263,       1232]
+CellTagsIndexPosition[     51220,       1229]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -231,27 +231,31 @@ Cell[BoxData[
    "New", " ", "attributes", " ", "for", " ", "trilevel", " ", "game"}], " ", 
    "*)"}], "\[IndentingNewLine]", 
   RowBox[{
-   RowBox[{"e\[Xi]", "=", 
-    RowBox[{"{", 
-     RowBox[{
-     "2", ",", "6", ",", "9", ",", "10", ",", "14", ",", "17", ",", "20"}], 
-     "}"}]}], ";", 
+   RowBox[{
+    RowBox[{"e\[Xi]", "=", 
+     RowBox[{"{", 
+      RowBox[{
+      "2", ",", "6", ",", "9", ",", "10", ",", "14", ",", "17", ",", "20"}], 
+      "}"}]}], ";"}], 
    RowBox[{"(*", " ", 
     RowBox[{"defensible", " ", "arc", " ", "set", " ", 
      RowBox[{"(", "IDs", ")"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{"n\[Xi]", "=", "3"}], ";", 
+   RowBox[{
+    RowBox[{"n\[Xi]", "=", "3"}], ";"}], 
    RowBox[{"(*", " ", 
     RowBox[{"arc", " ", "defense", " ", "limit"}], " ", "*)"}], 
    "\[IndentingNewLine]", 
-   RowBox[{"e\[Psi]", "=", 
-    RowBox[{"Join", "[", 
-     RowBox[{"e\[Xi]", ",", 
-      RowBox[{"{", 
-       RowBox[{"1", ",", "12"}], "}"}]}], "]"}]}], ";", 
+   RowBox[{
+    RowBox[{"e\[Psi]", "=", 
+     RowBox[{"Join", "[", 
+      RowBox[{"e\[Xi]", ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "12"}], "}"}]}], "]"}]}], ";"}], 
    RowBox[{"(*", " ", 
     RowBox[{"destrucible", " ", "arc", " ", "set", " ", 
      RowBox[{"(", "IDs", ")"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{"n\[Psi]", "=", "3"}], ";", 
+   RowBox[{
+    RowBox[{"n\[Psi]", "=", "3"}], ";"}], 
    RowBox[{"(*", " ", 
     RowBox[{"arc", " ", "destruction", " ", "limit"}], " ", 
     "*)"}]}]}]], "Input",
@@ -1051,9 +1055,9 @@ Cell[BoxData[
        RowBox[{"line", ".", "\[IndentingNewLine]", "\"\<p\>\""}], " ", 
        "indicates", " ", "the", " ", "objective", " ", "line"}], ":", " ", 
       RowBox[{
-      "SENSE", " ", "NODES", " ", "DENSITY", " ", "INTER", " ", "PARENT", 
-       "\[IndentingNewLine]", "\"\<n\>\"", " ", "indicates", " ", "a", " ", 
-       "node", " ", 
+      "SENSE", " ", "NODES", " ", "DENSITY", " ", "INTER", " ", "PARENT", " ",
+        "DEFENSES", " ", "DESTRUCTIONS", "\[IndentingNewLine]", "\"\<n\>\"", 
+       " ", "indicates", " ", "a", " ", "node", " ", 
        RowBox[{"line", ":", " ", 
         RowBox[{"ID", " ", "FLOW", " ", 
          RowBox[{"(", 
@@ -1070,8 +1074,24 @@ Cell[BoxData[
           RowBox[{"PARENT", " ", "CHILD", " ", 
            RowBox[{"(", 
             RowBox[{
-            "arc", " ", "indices", " ", "start", " ", "at", " ", "1"}], 
-            ")"}]}]}]}]}]}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+            "arc", " ", "indices", " ", "start", " ", "at", " ", "1"}], ")"}],
+            "\[IndentingNewLine]", "\"\<d\>\"", " ", "indicates", " ", "a", 
+           " ", "defensible", " ", "arc", " ", "line"}], ":", " ", 
+          RowBox[{"ID", " ", 
+           RowBox[{"(", 
+            RowBox[{
+            "arc", " ", "indices", " ", "start", " ", "at", " ", "1"}], ")"}],
+            "\[IndentingNewLine]", "\"\<r\>\"", " ", "indicates", " ", "a", 
+           " ", "destructible", " ", "arc", " ", 
+           RowBox[{"line", ":", " ", 
+            RowBox[{"ID", " ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+               "arc", " ", "indices", " ", "start", " ", "at", " ", "1"}], 
+               ",", " ", 
+               RowBox[{"skip", " ", "defensible", " ", "arcs"}]}], 
+              ")"}]}]}]}]}]}]}]}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{
     RowBox[{"SetDirectory", "[", 
@@ -1088,8 +1108,10 @@ generate interdependent networks\\nc  ---------------------------\\np min \
 \>\"", "<>", 
         RowBox[{"ToString", "[", "m", "]"}], "<>", "\"\< \>\"", "<>", 
         RowBox[{"ToString", "[", "n", "]"}], "<>", "\"\< \>\"", "<>", 
-        RowBox[{"ToString", "[", "p", "]"}], "<>", "\"\< a\\n\>\""}]}], ";", 
-      "\[IndentingNewLine]", 
+        RowBox[{"ToString", "[", "p", "]"}], "<>", "\"\< a \>\"", "<>", 
+        RowBox[{"ToString", "[", "n\[Xi]", "]"}], "<>", "\"\< \>\"", "<>", 
+        RowBox[{"ToString", "[", "n\[Psi]", "]"}], "<>", "\"\<\\n\>\""}]}], 
+      ";", "\[IndentingNewLine]", 
       RowBox[{"Do", "[", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{"If", "[", 
@@ -1152,6 +1174,34 @@ generate interdependent networks\\nc  ---------------------------\\np min \
         RowBox[{"{", 
          RowBox[{"i", ",", "1", ",", "p"}], "}"}]}], "]"}], ";", 
       "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"str", "=", 
+         RowBox[{"str", "<>", "\"\<d \>\"", "<>", 
+          RowBox[{"ToString", "[", 
+           RowBox[{"e\[Xi]", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "]"}], "<>", "\"\<\\n\>\""}]}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", "e\[Xi]", "]"}]}], "}"}]}], "]"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"str", "=", 
+         RowBox[{"str", "<>", "\"\<r \>\"", "<>", 
+          RowBox[{"ToString", "[", 
+           RowBox[{
+            RowBox[{"Complement", "[", 
+             RowBox[{"e\[Psi]", ",", "e\[Xi]"}], "]"}], "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "]"}], "<>", "\"\<\\n\>\""}]}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", 
+          RowBox[{"Length", "[", 
+           RowBox[{"Complement", "[", 
+            RowBox[{"e\[Psi]", ",", "e\[Xi]"}], "]"}], "]"}]}], "}"}]}], 
+       "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"Export", "[", 
        RowBox[{"\"\<smallnet.min\>\"", ",", "str", ",", "\"\<Text\>\""}], 
        "]"}]}]}], "\[IndentingNewLine]", "]"}]}]}]], "Input",
@@ -1162,7 +1212,8 @@ generate interdependent networks\\nc  ---------------------------\\np min \
   3.789122708008663*^9}, {3.789122751177701*^9, 3.789122815950925*^9}, {
   3.789122853705093*^9, 3.789122891185049*^9}, {3.7891229270517063`*^9, 
   3.7891229478735447`*^9}, {3.789123019322275*^9, 3.7891230301617055`*^9}, {
-  3.789123216757324*^9, 3.7891232317151794`*^9}}]
+  3.789123216757324*^9, 3.7891232317151794`*^9}, {3.7891234835111113`*^9, 
+  3.789123665992096*^9}, {3.7891237567841067`*^9, 3.789123810126863*^9}}]
 },
 WindowSize->{759, 833},
 WindowMargins->{{144, Automatic}, {Automatic, 73}},
@@ -1184,16 +1235,16 @@ Cell[558, 20, 533, 9, 87, "Text"],
 Cell[1094, 31, 723, 11, 125, "Text"],
 Cell[1820, 44, 273, 9, 5, "Text"],
 Cell[2096, 55, 7293, 169, 512, "Input"],
-Cell[9392, 226, 1429, 35, 112, "Input"],
-Cell[10824, 263, 14054, 331, 1012, "Input"],
-Cell[24881, 596, 8603, 208, 758, "Input"],
-Cell[33487, 806, 273, 9, 5, "Text"],
-Cell[33763, 817, 4817, 109, 552, "Input"],
-Cell[38583, 928, 4006, 91, 512, "Input"],
-Cell[42592, 1021, 159, 3, 31, "Input"],
-Cell[42754, 1026, 129, 2, 31, "Input"],
-Cell[42886, 1030, 273, 9, 5, "Text"],
-Cell[43162, 1041, 5481, 123, 552, "Input"]
+Cell[9392, 226, 1497, 39, 112, "Input"],
+Cell[10892, 267, 14054, 331, 1012, "Input"],
+Cell[24949, 600, 8603, 208, 758, "Input"],
+Cell[33555, 810, 273, 9, 5, "Text"],
+Cell[33831, 821, 4817, 109, 552, "Input"],
+Cell[38651, 932, 4006, 91, 512, "Input"],
+Cell[42660, 1025, 159, 3, 31, "Input"],
+Cell[42822, 1030, 129, 2, 31, "Input"],
+Cell[42954, 1034, 273, 9, 5, "Text"],
+Cell[43230, 1045, 7685, 170, 772, "Input"]
 }
 ]
 *)

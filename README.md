@@ -10,4 +10,4 @@ The goal of these programs is to generate two types of computational trial: a [s
 
 > H. Kaul and A. Rumpf. Linear input dependence model for interdependent civil infrastructure systems with network simplex based solution algorithm. In preparation, 2020.
 
-Small subsets of arcs are chosen to be available for protection and destruction. The network interdiction game is then solved by exhaustively searching the three-stage game tree and applying a minimax algorithm.
+Small subsets of arcs are chosen to be available for protection and destruction. The network interdiction game is then solved by exhaustively searching the three-stage game tree and applying a minimax algorithm. The output file format is based on the NETGEN format used in the main [MCNFLI trial program](https://github.com/adam-rumpf/mcnfli-trials), modified to include defense bounds, destruction bounds, and the defensible and destructible arc sets.
