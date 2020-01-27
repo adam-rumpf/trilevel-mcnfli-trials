@@ -229,5 +229,43 @@ def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp"):
     print("Temporary file deleted.")
 
 #==============================================================================
-def convert_folder():
-    pass
+def convert_folder(folder, defnum, attnum, defset=[], attset=[],
+                   temp="save.tmp"):
+    """Converts a folder of MCNFLI problem files into trilevel game files.
+
+    Applies convert_file() to all .min files in a specified directory. Only the
+    top level of the specified folder will be affected, not any of its
+    subfolders.
+
+    Requires the following positional arguments:
+        folder -- Name of the folder whose contents should be converted.
+        defnum -- Number of arcs that can be defended during Stage 1.
+        attnum -- Number of arcs that can be attacked during Stage 2.
+
+    Accepts the following optional keyword arguments:
+        defset -- List of defensible arc IDs (beginning at index 1). Defaults
+            to the empty list, which is treated as allowing all arcs to be
+            defended.
+        attset -- List of destructible arc IDs (beginning at index 1). Defaults
+            to the empty list, which is treated as allowing all arcs to be
+            destroyed. All defensible arcs are assumed to be attackable, so
+            only arcs that can be attacked but not defended need be listed.
+        temp -- Name of a temporary file used during the file conversion
+            process. Defaults to "save.tmp". As a temporary file this only
+            really needs to be changed if that name is already in use within
+            the specified directory.
+    """
+
+    # Get list of file names in the specified folder
+    for (_, _, files) in os.walk(folder):
+        break
+
+    num = len(files) # number of files to process
+
+    # Process each file
+    i = 1
+    for f in files:
+        convert_file(folder+"/"+f, defnum, attnum, defset=defset,
+                     attset=attset, temp=temp)
+        print("File "+str(i)+" / "+str(num)+" processed.")
+        i += 1
