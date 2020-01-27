@@ -16,6 +16,10 @@ The following scripts are included:
         interdependent network instance.
     generate_trials() -- Generates a set of trials with identical parameters
         but different random seeds.
+    convert_file() -- Converts an MCNFLI NETGEN file into the format required
+        for the trilevel extension.
+    convert_folder() -- Converts all MCNFLI NETGEN files in a folder into the
+        format required for the trilevel extension.
 """
 
 import math
@@ -132,9 +136,97 @@ def generate_trials(file, num, nodes, arcs, itype, inum, sources=None,
         if code != 0:
             continue
 
-        print("Trial "+str(i)+" / "+str(num)+" generated.")
+        print("File "+str(i)+" / "+str(num)+" generated.")
 
         i += 1
+
+#==============================================================================
+def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp"):
+    """Converts an MCNFLI problem file into a trilevel game problem file.
+
+    The file format for the trilevel network interdiction game is almost
+    completely identical to that of the standard interdependent network file,
+    except that we add comment lines to explain the new attributes, we add
+    defense and attack bounds to the objective line, and we add sets of
+    defensible and destructible arcs to the end of the file.
+
+    Requires the following positional arguments:
+        file -- Full name of the file to be converted (including the file
+            extension).
+        defnum -- Number of arcs that can be defended during Stage 1.
+        attnum -- Number of arcs that can be attacked during Stage 2.
+
+    Accepts the following optional keyword arguments:
+        defset -- List of defensible arc IDs (beginning at index 1). Defaults
+            to the empty list, which is treated as allowing all arcs to be
+            defended.
+        attset -- List of destructible arc IDs (beginning at index 1). Defaults
+            to the empty list, which is treated as allowing all arcs to be
+            destroyed. All defensible arcs are assumed to be attackable, so
+            only arcs that can be attacked but not defended need be listed.
+        temp -- Name of a temporary file used during the file conversion
+            process. Defaults to "save.tmp". As a temporary file this only
+            really needs to be changed if that name is already in use within
+            the same directory.
+    """
+
+    # Read input file while writing edited copy to a temporary file
+    with open(file, 'r') as fin:
+        with open(temp, 'w') as fout:
+            i = 0 # current line number
+            for line in fin:
+                i += 1
+
+                # Write edited contents for specific lines
+                if i == 2:
+                    # Replace interdependent network comment
+                    print("c Modified to generate trilevel interdiction",
+                          file=fout)
+                    print("c games on interdependent networks", file=fout)
+                elif i == 23:
+                    # Add trilevel game information at end of comments
+                    print("c   Interdiction Game Moves -", file=fout)
+                    print("c     Defense Limit:      "+str(defnum), file=fout)
+                    print("c     Attack Limit:       "+str(attnum), file=fout)
+                    if len(defset) > 0:
+                        print("c     Defensible Arc Set: "+str(len(defset)),
+                              file=fout)
+                    else:
+                        print("c     Defensible Arc Set: All", file=fout)
+                    if len(attset) > 0:
+                        print("c     Attackable Arc Set: "+str(len(attset)),
+                              file=fout)
+                    else:
+                        print("c     Attackable Arc Set: All", file=fout)
+                    print(line[:-1], file=fout)
+                elif line[0] == 'p':
+                    # Add defense/attack limits to end of objective line
+                    print(line[:-1]+" "+str(defnum)+" "+str(attnum), file=fout)
+                else:
+                    # Otherwise copy the line exactly
+                    print(line[:-1], file=fout)
+
+            # Add additional lines for the defensible and destructible arc sets
+            if len(defset) > 0:
+                for a in defset:
+                    print("d "+str(a), file=fout)
+                if len(attset) > 0:
+                    for a in attset:
+                        print("r "+str(a), file=fout)
+
+    print("File contents written to temporary file.")
+
+    # Overwrite original file with temporary file
+    with open(temp, 'r') as fin:
+        with open(file, 'w') as fout:
+            for line in fin:
+                print(line[:-1], file=fout)
+
+    print("Input file overwritten.")
+
+    # Delete temporary file
+    os.remove(temp)
+    print("Temporary file deleted.")
 
 #==============================================================================
 def convert_folder():
