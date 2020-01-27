@@ -14,7 +14,9 @@ Small subsets of arcs are chosen to be available for protection and destruction.
 
 ## NETGEN Files
 
-`netgen_edit.py` is a collection of Python functions for generating and editing random test instances. The implementation of NETGEN is taken from the main [MCNFLI trial program](https://github.com/adam-rumpf/mcnfli-trials). Specifically, the structure of a problem `.min` file is as follows:
+`netgen_edit.py` is a collection of Python functions for generating and editing random test instances. The implementation of NETGEN is taken from the main [MCNFLI trial program](https://github.com/adam-rumpf/mcnfli-trials), and the included scripts require the presence of a `netgen.exe` file in their local folder.
+
+The structure of a problem `.min` file is as follows:
 
 * Comment lines begin with `c` and are ignored by the solver.
 * The objective line begins with a `p` and contains the following information in order:
