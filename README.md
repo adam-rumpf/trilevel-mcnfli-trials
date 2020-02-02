@@ -36,8 +36,10 @@ The structure of a problem `.min` file is as follows:
   * upper flow bound
   * unit flow cost
 * Interdependencies begin with an `i` and contain the following information in order:
-  * parent ID (node ID if parent type `n` or arc ID if parent type `a`)
-  * child ID (always an arc ID)
+  * parent ID (arc ID)
+  * child ID (arc ID)
 * Defensible and destructible arc definitions begin with a `d` or `r`, respectively, and consist only of arc IDs. If no defensible or destructible arcs are listed, then all arcs are assumed to be available.
 
-Node IDs and arc IDs are both assumed to begin with `1`. In the case of arcs, the IDs used are assumed to correspond to their position within the complete arc list.
+Node IDs and arc IDs are both assumed to begin with `1`. Arc IDs used are assumed to correspond to their position within the complete arc list.
+
+The version of NETGEN used [here](https://github.com/adam-rumpf/mcnfli-trials) transforms a network with sink node parents into an equivalent form for which these parents are represented as arcs, and so the parent ID value is always an arc ID. When using this type of file to construct a mathematical program, the supply values of sources should be relaxed. Supply values do not need to be relaxed when using arcs as parents.
