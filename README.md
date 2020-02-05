@@ -14,7 +14,7 @@ Small subsets of arcs are chosen to be available for protection and destruction.
 
 ## NETGEN Files
 
-`netgen_edit.py` is a collection of Python functions for generating and editing random test instances. The implementation of NETGEN is taken from the main [MCNFLI trial program](https://github.com/adam-rumpf/mcnfli-trials), and the included scripts require the presence of a `netgen.exe` file in their local folder.
+`netgen_edit.py` is a collection of Python functions for generating and editing random test instances. The implementation of NETGEN is taken from the main [MCNFLI trial program](https://github.com/adam-rumpf/mcnfli-trials), and the included scripts require the presence of a `netgen.exe` file in their local folder (see the [packages](https://github.com/adam-rumpf/trilevel-mcnfli-trials/packages) page of this repository).
 
 The structure of a problem `.min` file is as follows:
 
@@ -42,4 +42,4 @@ The structure of a problem `.min` file is as follows:
 
 Node IDs and arc IDs are both assumed to begin with `1`. Arc IDs used are assumed to correspond to their position within the complete arc list.
 
-The version of NETGEN used [here](https://github.com/adam-rumpf/mcnfli-trials) transforms a network with sink node parents into an equivalent form for which these parents are represented as arcs, and so the parent ID value is always an arc ID. When using this type of file to construct a mathematical program, the supply values of sources should be relaxed. Supply values do not need to be relaxed when using arcs as parents.
+The version of NETGEN used [here](https://github.com/adam-rumpf/mcnfli-trials) transforms a network with sink node parents into an equivalent form for which these parents are represented as arcs, and so the parent ID value is always an arc ID. When using this type of file to construct a mathematical program, the supply constraints of source nodes should be relaxed. Supply values do not need to be relaxed when using arcs as parents.
