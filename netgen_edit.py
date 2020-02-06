@@ -143,7 +143,8 @@ def generate_trials(file, num, nodes, arcs, itype, inum, sources=None,
         i += 1
 
 #==============================================================================
-def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp"):
+def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp",
+                 nonsink=False):
     """Converts an MCNFLI problem file into a trilevel game problem file.
 
     The file format for the trilevel network interdiction game is almost
@@ -170,34 +171,52 @@ def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp"):
             process. Defaults to "save.tmp". As a temporary file this only
             really needs to be changed if that name is already in use within
             the same directory.
+        nonsink -- An option for automatically making all arcs defensible and
+            destructible except for the artificailly created arcs for networks
+            with nodes as parents. If True, and if the network uses nodes as
+            parents, then defset and attset will be automatically set to
+            include all non-artificial arcs. Defaults to False.
     """
+
+    dset = defset # defensible arc set
+    aset = attset # destructible arc set
+
+    # Override given arc sets if automatically generating nonsink arcs
+    if nonsink == True:
+        dset = []
+        aset = []
 
     # Read input file while writing edited copy to a temporary file
     with open(file, 'r') as fin:
         with open(temp, 'w') as fout:
             i = 0 # current line number
+            a = 1 # current arc number
             for line in fin:
                 i += 1
 
                 # Write edited contents for specific lines
-                if i == 2:
+                if (i == 2) and (line[0] == 'c'):
                     # Replace interdependent network comment
                     print("c Modified to generate trilevel interdiction",
                           file=fout)
                     print("c games on interdependent networks", file=fout)
-                elif i == 23:
+                elif (i == 23) and (line[0] == 'c'):
                     # Add trilevel game information at end of comments
                     print("c   Interdiction Game Moves -", file=fout)
                     print("c     Defense Limit:      "+str(defnum), file=fout)
                     print("c     Attack Limit:       "+str(attnum), file=fout)
-                    if len(defset) > 0:
+                    if len(dset) > 0:
                         print("c     Defensible Arc Set: "+str(len(defset)),
                               file=fout)
+                    elif nonsink == True:
+                        print("c     Defensible Arc Set: Nonsink", file=fout)
                     else:
                         print("c     Defensible Arc Set: All", file=fout)
-                    if len(attset) > 0:
+                    if len(aset) > 0:
                         print("c     Attackable Arc Set: "+str(len(attset)),
                               file=fout)
+                    elif nonsink == True:
+                        print("c     Attackable Arc Set: Nonsink", file=fout)
                     else:
                         print("c     Attackable Arc Set: All", file=fout)
                     print(line[:-1], file=fout)
@@ -208,11 +227,18 @@ def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp"):
                     # Otherwise copy the line exactly
                     print(line[:-1], file=fout)
 
+                    # Record nonsink arcs (which have a head listed as 0)
+                    if nonsink == True:
+                        if line[0] == 'a':
+                            if int(line.split()[2]) != 0:
+                                dset.append(a)
+                            a += 1
+
             # Add additional lines for the defensible and destructible arc sets
-            if len(defset) > 0:
-                for a in defset:
+            if len(dset) > 0:
+                for a in dset:
                     print("d "+str(a), file=fout)
-                if len(attset) > 0:
+                if len(aset) > 0:
                     for a in attset:
                         print("r "+str(a), file=fout)
 
@@ -232,7 +258,7 @@ def convert_file(file, defnum, attnum, defset=[], attset=[], temp="save.tmp"):
 
 #==============================================================================
 def convert_folder(folder, defnum, attnum, defset=[], attset=[],
-                   temp="save.tmp"):
+                   temp="save.tmp", nonsink=False):
     """Converts a folder of MCNFLI problem files into trilevel game files.
 
     Applies convert_file() to all .min files in a specified directory. Only the
@@ -256,6 +282,11 @@ def convert_folder(folder, defnum, attnum, defset=[], attset=[],
             process. Defaults to "save.tmp". As a temporary file this only
             really needs to be changed if that name is already in use within
             the specified directory.
+        nonsink -- An option for automatically making all arcs defensible and
+            destructible except for the artificailly created arcs for networks
+            with nodes as parents. If True, and if the network uses nodes as
+            parents, then defset and attset will be automatically set to
+            include all non-artificial arcs. Defaults to False.
     """
 
     # Get list of file names in the specified folder
@@ -268,7 +299,7 @@ def convert_folder(folder, defnum, attnum, defset=[], attset=[],
     i = 1
     for f in files:
         convert_file(folder+"/"+f, defnum, attnum, defset=defset,
-                     attset=attset, temp=temp)
+                     attset=attset, temp=temp, nonsink=nonsink)
         print("File "+str(i)+" / "+str(num)+" processed.")
         i += 1
 
@@ -276,7 +307,7 @@ def convert_folder(folder, defnum, attnum, defset=[], attset=[],
 def generate_converted_trials(file, num, nodes, arcs, itype, inum, defnum,
                               attnum, sources=None, sinks=None, costs=(0, 100),
                               supply=None, capacities=(100, 500), defset=[],
-                              attset=[], temp="save.tmp"):
+                              attset=[], temp="save.tmp", nonsink=False):
     """Generates a set of converted trials using the same parameters.
 
     Similar to generate_trials(), except that it immediately processes all new
@@ -316,6 +347,11 @@ def generate_converted_trials(file, num, nodes, arcs, itype, inum, defnum,
             process. Defaults to "save.tmp". As a temporary file this only
             really needs to be changed if that name is already in use within
             the same directory.
+        nonsink -- An option for automatically making all arcs defensible and
+            destructible except for the artificailly created arcs for networks
+            with nodes as parents. If True, and if the network uses nodes as
+            parents, then defset and attset will be automatically set to
+            include all non-artificial arcs. Defaults to False.
     """
 
     # Set unspecified sources and sinks
@@ -344,7 +380,7 @@ def generate_converted_trials(file, num, nodes, arcs, itype, inum, defnum,
 
         # Use convert_file() to convert the new file
         convert_file(fname+".min", defnum, attnum, defset=defset,
-                     attset=attset, temp=temp)
+                     attset=attset, temp=temp, nonsink=nonsink)
 
         print("File "+str(i)+" / "+str(num)+" generated.")
 
